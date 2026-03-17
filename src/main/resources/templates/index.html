@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>URL Shortener</title>
+</head>
+<body>
+
+<h1>Shorten Your URL</h1>
+
+<form th:action="@{/urlShortner/home/shorten}" method="post">
+    <input type="text" name="originalUrl" placeholder="Enter URL" required>
+    <button type="submit">Shorten</button>
+</form>
+
+<br>
+
+<!-- ✅ Error from rate limiter -->
+<div th:if="${error}" style="color:red;">
+    <p th:text="${error}"></p>
+</div>
+
+<!-- ✅ Short URL display (FIXED) -->
+<div th:if="${shortUrl}">
+    <p>Your shortened URL:</p>
+
+    <!-- Copyable input field -->
+    <input type="text"
+           id="shortLink"
+           th:value="'http://localhost:8080/r/' + ${shortUrl}"
+           readonly
+           style="width:350px;">
+
+    <button onclick="copyLink()">Copy</button>
+
+    <br><br>
+
+    <!-- Optional clickable link -->
+    <a th:href="@{'/r/' + ${shortUrl}}">Open Link</a>
+</div>
+
+<script>
+function copyLink() {
+    const input = document.getElementById("shortLink");
+    input.select();
+    input.setSelectionRange(0, 99999); // for mobile
+    document.execCommand("copy");
+    alert("Copied to clipboard!");
+}
+</script>
+
+</body>
+</html>
